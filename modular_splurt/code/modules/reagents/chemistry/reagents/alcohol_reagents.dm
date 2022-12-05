@@ -286,3 +286,53 @@
 	glass_name = "Tropical Storm"
 	glass_desc = "Less destructive than the real thing."
 
+/datum/reagent/consumable/ethanol/bone_hurting_juice
+	name = "Bone Hurting Juice"
+	description = "You may have misinterpreted the recipe."
+	color = "#e3dac9" // rgb: 227, 218, 201 (Bone)
+	boozepwr = 70 // High power to prevent abuse
+	quality = DRINK_VERYGOOD
+	taste_description = "comedic misinterpretations and skeletal damage"
+	glass_name = "Bone Hurting Juice"
+	glass_desc = "Oww oof my bones!"
+
+// Reaction for bone hurting juice
+/datum/reagent/consumable/ethanol/bone_hurting_juice/on_mob_life(mob/living/carbon/bone_target)
+	// Escape clause check for Glass Bones trait
+	if(!HAS_TRAIT(bone_target, TRAIT_GLASS_BONES))
+		// Apply bicaridine, since it's an ingredient
+		// Intentionally not applied for Glass Bones users
+		. = ..()
+		if(!(current_cycle % 10)) // Every 10 cycles
+			bone_target.reagents.add_reagent(/datum/reagent/medicine/bicaridine, 2)
+		
+		// Escape
+		return
+
+	// Randomly select a body part to damage (this could be deduplicated!)
+	// This point onward should only apply if you have glass bones!
+	var/picked_bodypart = pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG)
+	var/obj/item/bodypart/bodypart_target = bone_target.get_bodypart(picked_bodypart)
+
+	// Check if organic limb, because robotic limbs don't have bones
+	if(bodypart_target && bodypart_target.is_organic_limb() && !bodypart_target.is_pseudopart)
+
+		// Apply damage periodically to prevent guaranteed death
+		. = ..()
+		if((current_cycle % 10)) // Every 10 cycles
+			return // This is better as an escape clause
+		
+		bodypart_target.receive_damage((boozepwr*0.1)*REAGENTS_EFFECT_MULTIPLIER)
+		
+		// Chance to apply a 'severe' wound
+		if(prob(60))
+			var/datum/wound/blunt/severe/bone_wound = new
+			bone_wound.apply_wound(bodypart_target)
+			return // Don't apply both!
+		
+		// Chance to apply a 'critical' wound that disables the limb
+		if(prob(20))
+			var/datum/wound/blunt/critical/bone_wound = new
+			bone_wound.apply_wound(bodypart_target)
+		
+

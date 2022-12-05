@@ -179,3 +179,13 @@
 		/datum/reagent/consumable/pineapplejuice = 2
 	)
 
+/datum/chemical_reaction/bone_hurting_juice
+	name = "Bone Hurting Juice"
+	id = /datum/reagent/consumable/ethanol/bone_hurting_juice
+	results = list(/datum/reagent/consumable/ethanol/bone_hurting_juice = 2)
+	required_reagents = list(
+		/datum/reagent/consumable/ethanol/vodka = 2,
+		/datum/reagent/medicine/bicaridine = 1
+	)
+	mix_message = "Quiet oofing noises emanate from the mixture..."
+
