@@ -104,6 +104,7 @@
 		C.reagents.add_reagent(/datum/reagent/drug/aphrodisiac, 2)
 
 /datum/reagent/consumable/ethanol/isloation_cell/morphine
+	name = "Solitary Cell"
 	description = "It has a distinct, sour smell, much like morphine."
 	taste_description = "cloth dissolved in sulphuric acid. Something feels off about it."
 	glass_desc = "It has a distinct, sour smell, much like morphine."
@@ -112,6 +113,11 @@
 	. = ..()
 	if(!(current_cycle % 10)) //Every 10 cycles
 		C.reagents.add_reagent_list(list(/datum/reagent/medicine/morphine = 2, /datum/reagent/consumable/ethanol/hippies_delight = 1))
+		
+		// Unconsciousness effect
+		if(prob(60))
+			to_chat(C, "<span class='warning'>You black out.</span>")
+			C.AdjustUnconscious(200, FALSE)
 
 /datum/reagent/consumable/ethanol/chemical_ex
 	name = "Chemical Ex"
@@ -153,6 +159,16 @@
 	glass_name = "Moth in Chief"
 	glass_desc = "A simple yet elegant drink, inspires confidence in even the most pessimistic of men. The mantle rests well upon your shoulders."
 
+/datum/reagent/consumable/ethanol/moth_in_chief/on_mob_life(mob/living/carbon/C)
+	. = ..()
+	if(!(current_cycle % 10)) //Every 10 cycles
+		C.reagents.add_reagent_list(list(
+				/datum/reagent/medicine/regen_jelly = 2,
+				// Contents of Stimulant pill
+				/datum/reagent/medicine/ephedrine = 2,
+				/datum/reagent/medicine/antihol = 2,
+				/datum/reagent/consumable/coffee = 4
+			))
 
 // ~( Ported from TG )~
 /datum/reagent/consumable/ethanol/curacao
