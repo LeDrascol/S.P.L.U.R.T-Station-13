@@ -58,30 +58,3 @@
 /obj/item/storage/secure/briefcase/bsbaton/tele/PopulateContents()
 	new /obj/item/melee/classic_baton/telescopic(src)
 	new /obj/item/storage/belt/security(src)
-
-/obj/item/storage/secure/briefcase/permits
-	name = "\improper \'Weapon\' permits case"
-	desc = "A storage case for weapon permits. Keep this secure!"
-
-
-/obj/item/storage/secure/briefcase/permits/PopulateContents()
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
-	new /obj/item/clothing/accessory/permit(src)
