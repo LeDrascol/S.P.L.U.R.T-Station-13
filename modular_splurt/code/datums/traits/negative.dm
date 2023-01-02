@@ -108,7 +108,8 @@
 /datum/quirk/hypersensitive
 	name = "Hypersensitive"
 	desc = "For better or worse, everything seems to affect your mood more than it should."
-	value = -1
+	// Changed -1 to 0: Mood quirk
+	value = 0
 	gain_text = "<span class='danger'>You seem to make a big deal out of everything.</span>"
 	lose_text = "<span class='notice'>You don't seem to make a big deal out of everything anymore.</span>"
 	mood_quirk = TRUE //yogs
@@ -174,7 +175,8 @@
 /datum/quirk/hungry
 	name = "Hungry And Thirsty"
 	desc = "You find yourself unusually hungry and thirsty. Gotta eat and drink twice as much as normal."
-	value = -1
+	// Changed -1 to 0: Mood quirk (hunger and thirst control mood!)
+	value = 0
 	gain_text = "<span class='danger'>You're starting to feel hungrier and thirstier a lot faster.</span>"
 	lose_text = "<span class='notice'>Your craving for food and water begins dying down.</span>"
 	medical_record_text = "Patient reports eating twice as many meals per day than usual for their species."
@@ -191,3 +193,11 @@
 		var/datum/physiology/P = H.physiology
 		P.hunger_mod /= 2
 		P.thirst_mod /= 2
+
+/datum/quirk/hypnotic_stupor
+	// Changed from 0: Causes a trauma
+	value = -2
+
+/datum/quirk/sheltered
+	// Changed from 0: Makes communication difficult
+	value = -1

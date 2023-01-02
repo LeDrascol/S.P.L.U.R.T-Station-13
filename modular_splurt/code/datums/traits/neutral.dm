@@ -72,7 +72,8 @@
 /datum/quirk/Hypnotic_gaze
 	name = "Hypnotic Gaze"
 	desc = "Be it through mysterious patterns, flickering colors, or some genetic oddity, prolonged eye contact with you will place the viewer into a highly-suggestible hypnotic trance."
-	value = 0
+	// Changed from 0: Grants a new ability
+	value = 1
 	mob_trait = TRAIT_HYPNOTIC_GAZE
 	gain_text = "<span class='notice'>Your eyes glimmer hypnotically...</span>"
 	lose_text = "<span class='notice'>Your eyes return to normal.</span>"
@@ -157,7 +158,8 @@
 /datum/quirk/heat
 	name = "Estrus Detection"
 	desc = "You have a animalistic sense of detecting if someone is in heat."
-	value = 0
+	// Changed from 0: Grants a new ability
+	value = 1
 	mob_trait = TRAIT_HEAT_DETECT
 	gain_text = "<span class='notice'>You feel your senses adjust, allowing a animalistic sense of others' fertility.</span>"
 	lose_text = "<span class='notice'>You feel your sense of others' fertility fade.</span>"
@@ -368,7 +370,8 @@
 /datum/quirk/cum_sniff
 	name = "Genital Taster"
 	desc = "You've built so much experience savoring other people's genitals through your life that you can easily tell what liquids they're full of, besides reagents in their blood that is."
-	value = 0
+	// Changed from 0: Grants a new ability
+	value = 1
 	mob_trait = TRAIT_GFLUID_DETECT
 	gain_text = "<span class='notice'>You begin sensing peculiar smells from people's bits...</span>"
 	lose_text = "<span class='notice'>People's genitals start smelling all the same to you...</span>"
@@ -377,7 +380,8 @@
 /datum/quirk/fluid_infuser
 	name = "Fluid Infuser"
 	desc = "You just couldn't wait to get one of NanoTrasen's new fluid inducers when they first came out, so now you can hop in the station with editable titty milk!"
-	value = 0
+	// Changed from 0: Grants a new ability
+	value = 1
 
 /datum/quirk/fluid_infuser/on_spawn()
 	. = ..()
@@ -387,7 +391,8 @@
 /datum/quirk/incubus
 	name = "Incubus"
 	desc = "Your seductor-like metabolism can only be sated by milk. (And semen, if you're a Succubus as well.)"
-	value = 0
+	// Changed from 0: Can't use food
+	value = -1
 	mob_trait = TRAIT_INCUBUS
 	processing_quirk = TRUE
 
@@ -411,7 +416,8 @@
 /datum/quirk/succubus
 	name = "Succubus"
 	desc = "Your seductress-like metabolism can only be sated by semen. (And milk, if you're an Incubus as well.)"
-	value = 0
+	// Changed from 0: Can't use food
+	value = -1
 	mob_trait = TRAIT_SUCCUBUS
 	processing_quirk = TRUE
 
@@ -435,7 +441,8 @@
 /datum/quirk/vampire//splurt change start
 	name = "Bloodsucker Fledgeling"
 	desc = "You are a fledgeling of an ancient Bloodsucker bloodline; your skin is incurably pale and your mouth glimmers with vampiric fangs. Only blood will sate your hungers, and holy energies will cause your flesh to char."
-	value = 0
+	// Changed from 0: Grants multiple new abilities
+	value = 2
 	medical_record_text = "this person was partially infected by a bloodsucker"
 	mob_trait = BLOODFLEDGE
 	gain_text = "<span class='notice'>You feel an otherworldly thirst.</span>"
@@ -517,7 +524,8 @@
 /datum/quirk/werewolf //adds the werewolf quirk
 	name = "Werewolf"
 	desc = "A beastly affliction allows you to shapeshift into a more wolfish appearance at will. This will increase your size (In general and below!) and cause you to behave as though you were an anthropomorphic canine. (This is still being tested. Please send any bugs to nukechicken on discord)"
-	value = 0
+	// Changed from 0: Grants an overpowered new ability
+	value = 2
 
 /datum/quirk/werewolf/add()
 	. = ..()
@@ -535,7 +543,8 @@
 /datum/quirk/gargoyle //Mmmm yes stone time
 	name = "Gargoyle"
 	desc = "You are some form of gargoyle! You can only leave your stone form for so long, and will have to return to it to regain energy. On the bright side, you heal in statue form!"
-	value = 0
+	// Changed from 0: Grants a new ability
+	value = 1
 	processing_quirk = TRUE
 	var/energy = 0
 	var/transformed = 0
@@ -873,3 +882,43 @@ datum/action/gargoyle/pause/Trigger()
 		return
 	else
 		to_chat(H, "<span class='warning'>You are already conserving your energy!</span>")
+
+/datum/quirk/glass_bones
+	// Changed from -1: Negligible penalty
+	value = 0
+
+/datum/quirk/paper_skin
+	// Changed from -1: Negligible penalty
+	value = 0
+
+/datum/quirk/apathetic
+	// Changed from 1: Mood quirk
+	value = 0
+
+/datum/quirk/empath
+	// Changed from 2: Mood quirk
+	value = 0
+
+/datum/quirk/friendly
+	// Changed from 1: Mood quirk
+	value = 0
+
+/datum/quirk/jolly
+	// Changed from 1: Mood quirk
+	value = 0
+
+/datum/quirk/musician
+	// Changed from 1: Mood quirk
+	value = 0
+
+/datum/quirk/depression
+	// Changed from -1: Mood quirk
+	value = 0
+
+/datum/quirk/family_heirloom
+	// Changed from -1: Mood quirk (technically)
+	value = 0
+
+/datum/quirk/unstable
+	// Changed from -2: Mood quirk (technically)
+	value = 0
