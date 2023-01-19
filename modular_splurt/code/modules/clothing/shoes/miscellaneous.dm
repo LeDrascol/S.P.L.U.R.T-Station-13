@@ -5,6 +5,7 @@
 	icon_state = "foot_wraps"
 	mob_overlay_icon = 'modular_splurt/icons/mob/clothing/shoes.dmi'
 	anthro_mob_worn_overlay = 'modular_splurt/icons/mob/clothing/shoes_digi.dmi'
+	can_be_tied = FALSE
 
 /obj/item/clothing/shoes/invisiboots
 	name = "invisifiber footwraps"
@@ -12,6 +13,7 @@
 	icon = 'modular_splurt/icons/obj/clothing/shoes.dmi'
 	icon_state = "foot_wraps_transparent"
 	// No overlay, because they're invisible!
+	can_be_tied = FALSE
 
 /obj/item/clothing/shoes/jackboots/toeless
 	name = "toe-less jackboots"
