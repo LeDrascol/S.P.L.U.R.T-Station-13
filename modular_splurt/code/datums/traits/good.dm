@@ -37,12 +37,13 @@
 	name = "Dominant Aura"
 	desc = "Your mere presence is assertive enough to appear as powerful to other people, so much in fact that the weaker kind can't help but throw themselves at your feet at the snap of a finger."
 	value = 1
+	mob_trait = TRAIT_DOMINANT_AURA
 	gain_text = span_notice("You feel like making someone your pet.")
 	lose_text = span_notice("You feel less assertive.")
 
 /datum/quirk/dominant_aura/add()
 	. = ..()
-	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/on_examine_holder)
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/quirk_examine_dominant_aura)
 	RegisterSignal(quirk_holder, COMSIG_MOB_EMOTE, .proc/handle_snap)
 
 /datum/quirk/dominant_aura/remove()
@@ -50,21 +51,33 @@
 	UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
 	UnregisterSignal(quirk_holder, COMSIG_MOB_EMOTE)
 
-/datum/quirk/dominant_aura/proc/on_examine_holder(atom/source, mob/user, list/examine_list)
+/datum/quirk/dominant_aura/proc/quirk_examine_dominant_aura(atom/examine_target, mob/living/carbon/human/examiner, list/examine_list)
 	SIGNAL_HANDLER
 
-	if(!ishuman(user))
-		return
-	var/mob/living/carbon/human/sub = user
-	if(!sub.has_quirk(/datum/quirk/well_trained) || (sub == quirk_holder))
+	// Check if human examiner exists
+	if(!istype(examiner))
 		return
 
-	examine_list += span_lewd("\nYou can't make eye contact with [quirk_holder.p_them()] before flustering away!")
-	if(!TIMER_COOLDOWN_CHECK(user, COOLDOWN_DOMINANT_EXAMINE))
-		to_chat(quirk_holder, span_notice("\The [user] tries to look at you but immediately turns away with a red face..."))
-		TIMER_COOLDOWN_START(user, COOLDOWN_DOMINANT_EXAMINE, 5 SECONDS)
-	sub.dir = turn(get_dir(sub, quirk_holder), pick(-90, 90))
-	sub.emote("blush")
+	// Check if examiner has the quirk, or is self examining
+	if(!examiner.has_quirk(/datum/quirk/well_trained) || (examiner == quirk_holder))
+		return
+
+	// Display message to examiner
+	to_chat(examiner, span_lewd("You can't make eye contact with [quirk_holder.p_them()] before flustering away!"))
+
+	// Check for cooldown
+	if(!TIMER_COOLDOWN_CHECK(examiner, COOLDOWN_DOMINANT_EXAMINE))
+		// Display message to holder
+		to_chat(quirk_holder, span_lewd("\The [examiner] tries to look at you but immediately turns away with a red face..."))
+
+		// Set cooldown
+		TIMER_COOLDOWN_START(examiner, COOLDOWN_DOMINANT_EXAMINE, 5 SECONDS)
+
+	// Set direction facing
+	examiner.dir = turn(get_dir(examine_target, quirk_holder), pick(-90, 90))
+
+	// Display emote
+	examiner.emote("blush")
 
 /datum/quirk/dominant_aura/proc/handle_snap(datum/source, list/emote_args)
 	SIGNAL_HANDLER

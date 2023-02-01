@@ -44,6 +44,20 @@
 	lose_text = span_notice("Having your head pet doesn't sound so bad right about now...")
 	medical_record_text = "Patient cares little with or dislikes being touched."
 
+/datum/quirk/headpat_hater/add()
+	// Add examine signal
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/quirk_examine_headpat_hater)
+
+/datum/quirk/headpat_hater/remove()
+	// Remove examine signal
+	UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
+
+/datum/quirk/proc/quirk_examine_headpat_hater(atom/examine_target, mob/living/examiner, list/examine_list)
+	SIGNAL_HANDLER
+
+	// Add head pat hate message
+	examine_list += span_info("[quirk_holder.p_they(TRUE)] look[quirk_holder.p_s()] like someone you shouldn't give head pats to.")
+
 /datum/quirk/headpat_slut
 	name = "Headpat Slut"
 	desc = "You love the feeling of others touching your head! Maybe a little too much, actually... Others patting your head will provide a bigger mood boost and cause aroused reactions."
@@ -54,12 +68,24 @@
 	medical_record_text = "Patient seems overly affectionate."
 
 /datum/quirk/headpat_slut/add()
-	. = ..()
+	// Add headpat element
 	quirk_holder.AddElement(/datum/element/wuv/headpat, null, null, /datum/mood_event/pet_animal)
 
+	// Add examine signal
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/quirk_examine_headpat_slut)
+
 /datum/quirk/headpat_slut/remove()
-	. = ..()
+	// Remove headpat element
 	quirk_holder.RemoveElement(/datum/element/wuv/headpat)
+
+	// Remove examine signal
+	UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
+
+/datum/quirk/proc/quirk_examine_headpat_slut(atom/examine_target, mob/living/examiner, list/examine_list)
+	SIGNAL_HANDLER
+
+	// Add head pat love message
+	examine_list += span_info("[quirk_holder.p_they(TRUE)] look[quirk_holder.p_s()] like someone that enjoys head pats more than usual.")
 
 /datum/quirk/in_heat
 	name = "In Heat"
@@ -173,24 +199,28 @@
 	var/mob/living/carbon/human/last_dom
 
 /datum/quirk/well_trained/add()
-	. = ..()
-	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/on_examine_holder)
+	// Add examine signal
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/quirk_examine_well_trained)
 
 /datum/quirk/well_trained/remove()
-	. = ..()
+	// Remove examine signal
 	UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
 
-/datum/quirk/well_trained/proc/on_examine_holder(atom/source, mob/living/user, list/examine_list)
+/datum/quirk/well_trained/proc/quirk_examine_well_trained(atom/examine_target, mob/living/carbon/human/examiner, list/examine_list)
 	SIGNAL_HANDLER
 
-	if(!istype(user))
+	// Check if human examiner exists
+	if(!istype(examiner))
 		return
-	if(!user.has_quirk(/datum/quirk/dominant_aura))
+
+	// Check if examiner has dominant aura
+	if(!HAS_TRAIT(examiner, TRAIT_DOMINANT_AURA))
 		return
-	examine_list += span_lewd("You sense a strong aura of submission from [quirk_holder.p_them()].")
+
+	// Add examine message
+	examine_list += span_lewd("[quirk_holder.p_they(TRUE)] [quirk_holder.p_are()] radiating a strong aura of submission.")
 
 /datum/quirk/well_trained/on_process()
-	. = ..()
 	if(!quirk_holder)
 		return
 
@@ -290,7 +320,7 @@
 /datum/quirk/storage_concealment
 	name = "Dorsualiphobic Augmentation"
 	desc = "You despise the idea of being seen wearing any type of back-mounted storage apparatus! A new technology shields you from the immense shame you may experience, by hiding your equipped backpack."
-	
+
 	// UNUSED: Enable by setting these values to TRUE
 	// The shame is unbearable
 	mood_quirk = FALSE
@@ -299,10 +329,10 @@
 
 /datum/quirk/storage_concealment/on_spawn()
 	. = ..()
-	
+
 	// Create a new augment item
 	var/obj/item/implant/hide_backpack/put_in = new
-	
+
 	// Apply the augment to the quirk holder
 	put_in.implant(quirk_holder, null, TRUE, TRUE)
 
@@ -376,8 +406,6 @@
 	processing_quirk = TRUE
 
 /datum/quirk/bloodfledge/add()
-	. = ..()
-
 	// Define quirk mob
 	var/mob/living/carbon/human/quirk_mob = quirk_holder
 
@@ -398,9 +426,10 @@
 	// Add quirk language
 	quirk_mob.grant_language(/datum/language/vampiric, TRUE, TRUE, LANGUAGE_BLOODSUCKER)
 
-/datum/quirk/bloodfledge/on_process()
-	. = ..()
+	// Register examine text
+	RegisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE, .proc/quirk_examine_bloodfledge)
 
+/datum/quirk/bloodfledge/on_process()
 	// Check if the current area is a coffin
 	if(istype(quirk_holder.loc, /obj/structure/closet/crate/coffin))
 		// Define quirk mob
@@ -467,8 +496,6 @@
 		quirk_mob.adjust_nutrition(health_restored*-1)
 
 /datum/quirk/bloodfledge/remove()
-	. = ..()
-	
 	// Define quirk mob
 	var/mob/living/carbon/human/quirk_mob = quirk_holder
 
@@ -485,9 +512,10 @@
 	// Remove quirk language
 	quirk_mob.remove_language(/datum/language/vampiric, TRUE, TRUE, LANGUAGE_BLOODSUCKER)
 
-/datum/quirk/bloodfledge/on_spawn()
-	. = ..()
+	// Unregister examine text
+	UnregisterSignal(quirk_holder, COMSIG_PARENT_EXAMINE)
 
+/datum/quirk/bloodfledge/on_spawn()
 	// Define quirk mob
 	var/mob/living/carbon/human/quirk_mob = quirk_holder
 
@@ -523,6 +551,50 @@
 	// Alert user in chat
 	// This should not post_add, because the ID is added by on_spawn
 	to_chat(quirk_holder, span_boldnotice("There is a bloodfledge's ID card [id_location], linked to your station account. It functions as a spare ID, but lacks job access."))
+
+/datum/quirk/bloodfledge/proc/quirk_examine_bloodfledge(atom/examine_target, mob/living/carbon/human/examiner, list/examine_list)
+	SIGNAL_HANDLER
+
+	// Check if human examiner exists
+	if(!istype(examiner))
+		return
+
+	// Define quirk mob
+	var/mob/living/carbon/human/quirk_mob = quirk_holder
+
+	// Define hunger texts
+	var/examine_hunger_public
+	var/examine_hunger_secret
+
+	// Check hunger levels
+	switch(quirk_mob.nutrition)
+		// Hungry
+		if(NUTRITION_LEVEL_STARVING to NUTRITION_LEVEL_HUNGRY)
+			examine_hunger_secret = "[quirk_holder.p_they(TRUE)] [quirk_holder.p_are()] blood starved!"
+			examine_hunger_public = "[quirk_holder.p_they(TRUE)] seem[quirk_holder.p_s()] on edge from something."
+
+		// Starving
+		if(0 to NUTRITION_LEVEL_STARVING)
+			examine_hunger_secret = "[quirk_holder.p_they(TRUE)] [quirk_holder.p_are()] in dire need of blood!"
+			examine_hunger_public = "[quirk_holder.p_they(TRUE)] [quirk_holder.p_are()] radiating an aura of frenzied hunger!"
+
+		// Invalid hunger
+		else
+			// Return with no message
+			return
+
+	// Check if examiner shares the quirk
+	if(HAS_TRAIT(examiner, TRAIT_BLOODFLEDGE))
+		// Add detection text
+		examine_list += span_info("[quirk_holder.p_their(TRUE)] hunger makes it easy to identify them as a fellow bloodfledge!")
+
+		// Add hunger text
+		examine_list += span_warning(examine_hunger_secret)
+
+	// Check if public hunger text exists
+	else
+		// Add hunger text
+		examine_list += span_warning(examine_hunger_public)
 
 /datum/quirk/werewolf //adds the werewolf quirk
 	name = "Werewolf"
