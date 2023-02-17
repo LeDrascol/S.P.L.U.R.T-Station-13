@@ -220,6 +220,8 @@
 	name = "dissociative mirror"
 	desc = "An enchanted hand mirror. You may not recognize who stares back."
 	var/item_used
+	var/item_cooldown_length = 10 SECONDS
+	COOLDOWN_DECLARE(item_cooldown)
 
 /obj/item/handmirror/split_personality/attack_self(mob/user)
 	// Check if already used
@@ -234,6 +236,26 @@
 		to_chat(user, span_warning("You see nothing in [src]."))
 		return
 
+	// Check cooldown time
+	if(!COOLDOWN_FINISHED(src, item_cooldown))
+		// Warn user, then return
+		to_chat(user, span_warning("You refrain from peering into [src] again so soon."))
+		return
+
+	// Define eligible ghost users
+	var/list/ghost_candidates = get_all_ghost_role_eligible(TRUE)
+
+	// Check if any ghost candidates exist
+	if(!LAZYLEN(ghost_candidates))
+		// Warn user
+		to_chat(user, span_warning("You fail to appear in [src]. Try again later."))
+
+		// Set cooldown time
+		COOLDOWN_START(src, item_cooldown, item_cooldown_length)
+
+		// Return without effects
+		return
+
 	// Define human user
 	var/mob/living/carbon/human/mirror_user = user
 
@@ -246,6 +268,9 @@
 
 	// Alert in local chat
 	mirror_user.visible_message(span_warning("The [src] shatters in [mirror_user]'s hands!"), span_warning("The mirror shatters in your hands!"))
+
+	// Log usage event
+	log_game("[key_name(user)] used [src] to gain the split personality brain trauma.")
 
 	// Play mirror break sound
 	playsound(src, 'sound/effects/Glassbr3.ogg', 50, 1)

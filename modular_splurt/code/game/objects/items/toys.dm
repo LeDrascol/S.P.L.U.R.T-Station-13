@@ -9,6 +9,8 @@
 	desc = "A toy that resembles a special friend."
 	toysay = "I'll always be your best friend!"
 	var/item_used
+	var/item_cooldown_length = 10 SECONDS
+	COOLDOWN_DECLARE(item_cooldown)
 
 /obj/item/toy/figure/assistant/imaginary_friend/attack_self(mob/user as mob)
 	// Check if already used
@@ -21,6 +23,26 @@
 	if(!ishuman(user))
 		// Warn user, then return
 		to_chat(user, span_warning("You refrain from handling [src]."))
+		return
+
+	// Check cooldown time
+	if(!COOLDOWN_FINISHED(src, item_cooldown))
+		// Warn user, then return
+		to_chat(user, span_warning("You refrain from handling [src] again so soon."))
+		return
+
+	// Define eligible ghost users
+	var/list/ghost_candidates = get_all_ghost_role_eligible(TRUE)
+
+	// Check if any ghost candidates exist
+	if(!LAZYLEN(ghost_candidates))
+		// Warn user
+		to_chat(user, span_warning("Playing with [src] does not spark joy. Try again later."))
+
+		// Set cooldown time
+		COOLDOWN_START(src, item_cooldown, item_cooldown_length)
+
+		// Return without effects
 		return
 
 	// Define human user
