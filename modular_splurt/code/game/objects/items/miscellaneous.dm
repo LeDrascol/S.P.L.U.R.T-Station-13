@@ -219,17 +219,10 @@
 /obj/item/handmirror/split_personality
 	name = "dissociative mirror"
 	desc = "An enchanted hand mirror. You may not recognize who stares back."
-	var/item_used
 	var/item_cooldown_length = 10 SECONDS
 	COOLDOWN_DECLARE(item_cooldown)
 
 /obj/item/handmirror/split_personality/attack_self(mob/user)
-	// Check if already used
-	if(item_used)
-		// Warn user, then return
-		to_chat(user, span_warning("[src] is no longer functional."))
-		return
-
 	// Check if human user exists
 	if(!ishuman(user))
 		// Warn user, then return
@@ -262,10 +255,6 @@
 	// Add brain trauma
 	mirror_user.gain_trauma(/datum/brain_trauma/severe/split_personality, TRAUMA_RESILIENCE_SURGERY)
 
-	// Set item used variable
-	// This prevents future use
-	item_used = TRUE
-
 	// Alert in local chat
 	mirror_user.visible_message(span_warning("The [src] shatters in [mirror_user]'s hands!"), span_warning("The mirror shatters in your hands!"))
 
@@ -275,6 +264,21 @@
 	// Play mirror break sound
 	playsound(src, 'sound/effects/Glassbr3.ogg', 50, 1)
 
-	// Set flavor text
+	// Move original item to nullspace
+	src.moveToNullspace()
+
+	// Create new mirror at user's location
+	var/obj/item/handmirror/broken/new_mirror = new(user.loc)
+
+	// Force user to hold the new item
+	user.put_in_hands(new_mirror)
+
+	// Delete original item
+	qdel(src)
+
+/obj/item/handmirror/broken
 	name = "broken hand mirror"
 	desc = "You won\'t get much use out of it."
+
+/obj/item/handmirror/broken/attack_self(mob/user)
+	to_chat(user, span_warning("You look into [src], and see nothing of interest."))
