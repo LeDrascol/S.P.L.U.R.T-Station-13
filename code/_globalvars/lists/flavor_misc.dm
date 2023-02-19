@@ -209,8 +209,14 @@ GLOBAL_LIST_INIT(backbaglist, list(DBACKPACK, DSATCHEL, DDUFFELBAG, //everything
 	"Grey Satchel" = /obj/item/storage/backpack/satchel,
 	"Grey Duffel Bag" = /obj/item/storage/backpack/duffelbag,
 	"Leather Satchel" = /obj/item/storage/backpack/satchel/leather,
+	// SPLURT EDIT
 	"Snail Shell" = /obj/item/storage/backpack/snail,
-	"Sloog Shell" = /obj/item/storage/backpack/sloogshell))
+	"Sloog Shell" = /obj/item/storage/backpack/sloogshell,
+	"Bag of Holding" = /obj/item/storage/backpack/holding,
+	"Satchel of Holding" = /obj/item/storage/backpack/holding/satchel,
+	"Duffel Bag of Holding" = /obj/item/storage/backpack/holding/duffel,
+	// END SPLURT EDIT
+	))
 
 //Suit/Skirt
 #define PREF_SUIT "Jumpsuit"
